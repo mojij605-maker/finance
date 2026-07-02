@@ -148,6 +148,16 @@ function Nav({ page, setPage }) {
 }
 
 function Dashboard({ data }) {
+  if (data?.error) {
+    return (
+      <section className="panel full">
+        <h2>โหลดข้อมูลไม่สำเร็จ</h2>
+        <p>{data.error}</p>
+        <pre>{JSON.stringify(data.detail, null, 2)}</pre>
+      </section>
+    );
+  }
+  
   const s = data?.summary || {};
   const category = data?.category || [];
   const recent = data?.recent || [];
