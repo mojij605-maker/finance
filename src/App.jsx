@@ -34,10 +34,35 @@ export default function App() {
   }, []);
 
   async function loadOverview(lineUserId) {
-    const res = await fetch(`${API_URL}/api/overview?line_user_id=${encodeURIComponent(lineUserId)}`);
+  try {
+    console.log('API_URL =', API_URL);
+    console.log('LIFF lineUserId =', lineUserId);
+
+    const url = `${API_URL}/api/overview?line_user_id=${encodeURIComponent(lineUserId)}`;
+    console.log('OVERVIEW URL =', url);
+
+    const res = await fetch(url);
     const json = await res.json();
+
+    console.log('OVERVIEW RESPONSE =', json);
+
+    if (!res.ok || json.error) {
+      setData({
+        error: json.error || 'โหลดข้อมูลไม่สำเร็จ',
+        detail: json
+      });
+      return;
+    }
+
     setData(json);
+  } catch (err) {
+    console.error('LOAD OVERVIEW ERROR', err);
+    setData({
+      error: 'Dashboard เรียก Worker API ไม่สำเร็จ',
+      detail: String(err)
+    });
   }
+}
 
   async function loadTransactions() {
     if (!profile) return;
