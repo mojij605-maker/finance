@@ -124,16 +124,21 @@ export default function App() {
     ['budgets', '💌', 'งบ'],
     ['insights', '🧠', 'อินไซต์'],
     ['more', '✨', 'เพิ่มเติม']
-  ].map(([id, icon, label]) => (
-    <button
-      key={id}
-      className={page === id ? 'active' : ''}
-      onClick={() => setPage(id)}
-    >
-      <span>{icon}</span>
-      <small>{label}</small>
-    </button>
-  ))}
+  ].map(([id, icon, label]) => {
+    const morePages = ['more', 'timeline', 'goals', 'debts', 'rules', 'settings'];
+    const isActive = id === 'more' ? morePages.includes(page) : page === id;
+    return (
+      <button
+        key={id}
+        className={isActive ? 'active' : ''}
+        onClick={() => setPage(id)}
+        aria-label={label}
+      >
+        <span>{icon}</span>
+        <small>{label}</small>
+      </button>
+    );
+  })}
 </nav>
   </div>;
 }
@@ -165,7 +170,7 @@ function Dashboard({ data, api, mutate }) {
   const insights = d.insights || {};
   const income = Number(s.total_income || 0);
   const expense = Number(s.real_expense || 0);
-  const reing = income - expense;
+  const remaining = income - expense;
   return <div className="grid-page">
     <section className="hero-card full">
       <div><p>สุขภาพการเงินเดือนนี้</p><h2>{insights.healthScore ?? 0}/100</h2><span>{insights.personality || 'เริ่มบันทึกเพื่อให้ Finny วิเคราะห์ได้นะคะ'}</span></div><div className="big-raccoon">🦝✨</div>
@@ -245,7 +250,6 @@ function Bars({ rows, showMax=false }) { if(!rows || !rows.length) return <div c
 function Splash({ text }) { return <div className="splash"><div className="mascot big">🦝</div><b>{text}</b></div>; }
 
 function groupByDate(rows){ return rows.reduce((m,r)=>{ const d=r.purchase_date||'ไม่ระบุวันที่'; (m[d] ||= []).push(r); return m; },{}); }
-function pageTitle(p){ return {dashboard:'Dashboard',timeline:'Timeline',transactions:'รายการทั้งหมด',budgets:'งบประมาณ',goals:'เป้าหมาย',debts:'หนี้/ต้องจ่าย',insights:'Insight',rules:'Rule Engine',settings:'ตั้งค่า'}[p]||'Dashboard'; }
 function money(n){ return Number(n||0).toLocaleString('th-TH'); }
 function icon(type){ return {income:'💰',expense:'🛒',credit_card_expense:'💳',paylater_expense:'🧾',shared_expense:'👥'}[type]||'📝'; }
 function currentDate(){ return new Date().toISOString().slice(0,10); }
@@ -254,14 +258,14 @@ function todayThai(){ return new Date().toLocaleDateString('th-TH',{weekday:'lon
 
 function pageTitle(p){
   return {
-    dashboard:'Dashboard',
-    timeline:'Timeline',
+    dashboard:'หน้าหลัก',
+    timeline:'ไทม์ไลน์',
     transactions:'รายการทั้งหมด',
     budgets:'งบประมาณ',
     goals:'เป้าหมาย',
     debts:'หนี้/ต้องจ่าย',
-    insights:'Insight',
-    rules:'Rule Engine',
+    insights:'อินไซต์',
+    rules:'กฎอัตโนมัติ',
     settings:'ตั้งค่า',
     more:'เพิ่มเติม'
   }[p] || 'Dashboard';
