@@ -96,6 +96,15 @@ export default function App() {
 
       {error && <div className="alert"><b>โหลดข้อมูลไม่สำเร็จ</b><pre>{error}</pre></div>}
       {toast && <div className="toast">{toast}</div>}
+     {page === 'more' && (
+        <div className="more-page">
+          <button onClick={() => setPage('timeline')}>🗓️ ไทม์ไลน์</button>
+          <button onClick={() => setPage('goals')}>🎯 เป้าหมาย</button>
+          <button onClick={() => setPage('debts')}>💳 หนี้</button>
+          <button onClick={() => setPage('rules')}>⚙️ กฎ</button>
+          <button onClick={() => setPage('settings')}>🌙 ตั้งค่า</button>
+        </div>
+      )}
 
       {page === 'dashboard' && <Dashboard data={data} api={api} mutate={mutate} />}
       {page === 'timeline' && <Timeline data={data} />}
@@ -106,16 +115,6 @@ export default function App() {
       {page === 'insights' && <Insights data={data} api={api} />}
       {page === 'rules' && <Rules data={data} api={api} mutate={mutate} />}
       {page === 'settings' && <Settings data={data} api={api} mutate={mutate} />}
-
-      {page === 'more' && (
-        <div className="more-page">
-          <button onClick={() => setPage('timeline')}>🗓️ ไทม์ไลน์</button>
-          <button onClick={() => setPage('goals')}>🎯 เป้าหมาย</button>
-          <button onClick={() => setPage('debts')}>💳 หนี้</button>
-          <button onClick={() => setPage('rules')}>⚙️ กฎ</button>
-          <button onClick={() => setPage('settings')}>🌙 ตั้งค่า</button>
-        </div>
-      )}
     </main>
 
   <nav className="bottom">
@@ -166,7 +165,7 @@ function Dashboard({ data, api, mutate }) {
   const insights = d.insights || {};
   const income = Number(s.total_income || 0);
   const expense = Number(s.real_expense || 0);
-  const remaining = income - expense;
+  const reing = income - expense;
   return <div className="grid-page">
     <section className="hero-card full">
       <div><p>สุขภาพการเงินเดือนนี้</p><h2>{insights.healthScore ?? 0}/100</h2><span>{insights.personality || 'เริ่มบันทึกเพื่อให้ Finny วิเคราะห์ได้นะคะ'}</span></div><div className="big-raccoon">🦝✨</div>
