@@ -108,7 +108,18 @@ export default function App() {
       {page === 'settings' && <Settings data={data} api={api} mutate={mutate} />}
     </main>
 
-    <nav className="bottom">{navItems.slice(0,5).map(([id, icon, label]) => <button key={id} className={page===id?'active':''} onClick={()=>setPage(id)}><span>{icon}</span><small>{label}</small></button>)}</nav>
+   <nav className="bottom">
+  {navItems.map(([id, icon, label]) => (
+    <button
+      key={id}
+      className={page === id ? 'active' : ''}
+      onClick={() => setPage(id)}
+    >
+      <span>{icon}</span>
+      <small>{label}</small>
+    </button>
+  ))}
+</nav>
   </div>;
 }
 
