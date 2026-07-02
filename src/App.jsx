@@ -221,9 +221,50 @@ function Goals({ data, api, mutate }) {
 }
 
 function Debts({ data, api, mutate }) {
-  const payments = data?.payments || []; const shared = data?.shared || [];
-  return <div className="grid-page"><Panel title="💳 บัตร / PayLater"><Rows rows={payments.map(r=>({title:r.item_name,sub:r.provider || r.due_date,amount:r.amount}))} /></Panel><Panel title="👥 คนค้างเงิน"><Rows rows={shared.map(r=>({title:r.person_name,sub:r.status,amount:r.remaining_amount}))} /></Panel><Panel title="คำแนะนำปิดหนี้"><p>{data?.advice}</p></Panel></div>;
+  const obligations = data?.obligations || [];
+  const schedules = data?.schedules || [];
+  const payments = data?.payments || [];
+  const shared = data?.shared || [];
+
+  return <div className="grid-page debts-page">
+    <Panel title="💳 ภาระทั้งหมด">
+      <Rows rows={obligations.map(r => ({
+        title: r.provider || r.name || 'ภาระ',
+        sub: `${r.obligation_type || 'other'} · ${r.status || 'active'}`,
+        amount: r.remaining_amount ?? r.total_amount
+      }))} />
+    </Panel>
+
+    <Panel title="🗓️ ตารางงวดที่ต้องจ่าย">
+      <Rows rows={schedules.map(r => ({
+        title: r.provider || r.billing_month || 'งวดที่ต้องจ่าย',
+        sub: `${r.billing_month || '-'}${r.due_date ? ` · ครบ ${r.due_date}` : ''} · ${r.status || 'unpaid'}`,
+        amount: r.remaining_amount ?? r.amount
+      }))} />
+    </Panel>
+
+    <Panel title="🧾 บัตร / PayLater เดิม">
+      <Rows rows={payments.map(r => ({
+        title: r.item_name || r.provider || 'รายการต้องจ่าย',
+        sub: r.provider || r.due_date || r.payment_type || '-',
+        amount: r.amount
+      }))} />
+    </Panel>
+
+    <Panel title="👥 คนค้างเงิน">
+      <Rows rows={shared.map(r => ({
+        title: r.person_name || 'ไม่ระบุชื่อ',
+        sub: r.status || '-',
+        amount: r.remaining_amount
+      }))} />
+    </Panel>
+
+    <Panel title="คำแนะนำปิดหนี้">
+      <p>{data?.advice || 'ยังไม่มีคำแนะนำเพิ่มเติม'}</p>
+    </Panel>
+  </div>;
 }
+
 
 function Insights({ data, api }) {
   const x = data || {};
